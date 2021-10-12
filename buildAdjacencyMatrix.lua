@@ -113,31 +113,54 @@ for k,v in pairs(orderedQuests) do
 end
 
 questNamesByHeight = {}
-questNamesByHeight['bottomNoparent'] = {}
-for i=0,maxHeight do
+for i=1,maxHeight+2 do
 	questNamesByHeight[i] = {}
 end
 
 for k,v in pairs(orderedQuests) do 
-	nodeHeight = nodeHeights[v]
+	local nodeHeight = nodeHeights[v]
 	if(nodeHeight == 0) then
 		--check if it has any parents
-		hasParent = false
+		local hasParent = false
 		for i=1,n do
 			if(adjacencyMatrix[i][k] == 1) then
 				hasParent = true
 				break
 			end
 		end
-		if(hasParent) then
-			table.insert(questNamesByHeight[nodeHeight], v)
-		else
-			table.insert(questNamesByHeight['bottomNoparent'], v)
+		
+		if not hasParent then
+			nodeHeight = nodeHeight - 1
 		end
-	else
-		table.insert(questNamesByHeight[nodeHeight], v)
+	end
+	table.insert(questNamesByHeight[1 + maxHeight - nodeHeight], v)
+end
+
+split = {{8,4}, {7, 3}, {6,3}}
+for k,v in ipairs(split) do
+	local oldN = table.getn(questNamesByHeight)
+	local numSections = v[2]
+	local numNew = numSections - 1
+	for i=1,numNew do
+		table.insert(questNamesByHeight, {})
 	end
 	
+	for i=table.getn(questNamesByHeight), v[1]+numNew, -1 do
+		questNamesByHeight[i] = questNamesByHeight[i - numNew]
+	end
+	
+	local totalBucket = questNamesByHeight[v[1]]
+	
+	for i=v[1],v[1]+numNew do
+		questNamesByHeight[i] = {}
+	end
+	
+	local i = 0
+	for k2,v2 in pairs(totalBucket) do
+		local curBucket = v[1] + i%v[2]
+		i = i + 1
+		table.insert(questNamesByHeight[curBucket], v2)
+	end
 end
 
 --[[
@@ -152,15 +175,19 @@ end
 --[[
 --]]
 print('digraph D {')
-
 print('\tsplines=ortho')
-print('\tgraph [pad="0.15", nodesep="0.5", ranksep="0.75"]')
+print('\tgraph [pad="0.15", nodesep="0.5", ranksep="0.5"]')
 --[[
 ]]--
+
+alignmentNodes = {}
+
 for k,v in pairs(questNamesByHeight) do
 	print('\tsubgraph subs' .. k .. '{')
 	print('\t\trank = "same"')
-	
+	local alignmentNode = 'alignmentNode' .. k
+	print('\t\t' .. alignmentNode .. '[style=invis]') --
+	table.insert(alignmentNodes, alignmentNode)
 	for k2,v2 in pairs(v) do
 			print('\t\t' .. '"' .. v2 .. '"' .. ' ' .. '[shape=box]')
 	end
@@ -172,7 +199,6 @@ for k,v in pairs(orderedQuests) do
 	print('\t' .. '"' .. v .. '"' .. '' .. '[shape=box]')
 end
 ]]--
-print('\t"Vampyre Slayer" -> "A Porcine of Interest" [style = invis]')
 for k,v in pairs(orderedQuests) do
 	for k2,v2 in pairs(adjacencyMatrix[k]) do
 		if(v2 == 1) then
@@ -180,4 +206,10 @@ for k,v in pairs(orderedQuests) do
 		end
 	end
 end
+
+
+for i=2, table.getn(alignmentNodes) do
+		print('\t' .. alignmentNodes[i-1] .. ' -> ' .. alignmentNodes[i] .. ' [ style = invis ]' )
+end
+
 print('}')

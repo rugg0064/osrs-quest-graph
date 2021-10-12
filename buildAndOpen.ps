@@ -1,0 +1,4 @@
+@echo off
+lua .\buildAdjacencyMatrix.lua | Out-File thing.txt -Encoding ascii
+dot -Tpng thing.txt -o outfile.png
+./outfile.png

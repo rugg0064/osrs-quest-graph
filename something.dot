@@ -1,6 +1,6 @@
 digraph D {
         splines=ortho
-        graph [pad="0.15", nodesep="0.5", ranksep="0.75"]
+        graph [pad="0.15", nodesep="0.5", ranksep="1.5"]
         subgraph subs1{
                 rank = "same"
                 "Animal Magnetism" [shape=box]
@@ -113,8 +113,10 @@ digraph D {
                 rank = "same"
                 "Song of the Elves" [shape=box]
         }
-        subgraph subs0{
+		
+		subgraph sub0a{
                 rank = "same"
+				abc
                 "Alfred Grimhand's Barcrawl" [shape=box]
                 "Big Chompy Bird Hunting" [shape=box]
                 "Black Knights' Fortress" [shape=box]
@@ -141,6 +143,10 @@ digraph D {
                 "Pirate's Treasure" [shape=box]
                 "Plague City" [shape=box]
                 "Priest in Peril" [shape=box]
+		}
+        subgraph subs0{
+                rank = "same"
+				abc1
                 "Prince Ali Rescue" [shape=box]
                 "Rag and Bone Man" [shape=box]
                 "Romeo & Juliet" [shape=box]
@@ -191,6 +197,7 @@ digraph D {
                 "Witch's Potion" [shape=box]
                 "X Marks the Spot" [shape=box]
         }
+		abc -> abc1
         "Vampyre Slayer" -> "A Porcine of Interest" [style = invis]
         "A Tail of Two Cats" -> "Icthlarin's Little Helper" [penwidth=2, color=black]
         "A Taste of Hope" -> "Darkness of Hallowvale" [penwidth=2, color=black]
