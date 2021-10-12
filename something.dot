@@ -165,7 +165,6 @@ digraph D {
                 "Watchtower" [shape=box]
                 "Waterfall Quest" [shape=box]
                 "Witch's House" [shape=box]
-                spacer [style=invis]
         }
         subgraph subsbottomNoparent{
                 rank = "same"
